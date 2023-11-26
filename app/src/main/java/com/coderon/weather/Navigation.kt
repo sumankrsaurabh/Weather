@@ -32,7 +32,7 @@ fun Navigation() {
                 locationKey = it.arguments?.getString("location_key") ?: "",
                 locationName = it.arguments?.getString("name") ?: "",
                 country = it.arguments?.getString("country") ?: "",
-                state = it.arguments?.getString("state") ?: "",
+                state = it.arguments?.getString("state") ?: ""
             )
         }
     }

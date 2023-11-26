@@ -7,33 +7,30 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import com.coderon.weather.R
 
-val PublicSansLight = FontFamily(Font(R.font.publicsans_light))
-val PublicSansRegular = FontFamily(Font(R.font.publicsans_regular))
-val PublicSansBold = FontFamily(Font(R.font.publicsans_bold))
 
 val Typography = Typography(
     headlineLarge = TextStyle(
-        fontFamily = PublicSansBold,
+        fontFamily = FontFamily.Default,
         fontSize = 88.sp,
         letterSpacing = 0.5.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = PublicSansBold,
+        fontFamily = FontFamily.Default,
         fontSize = 16.sp,
         letterSpacing = 0.sp
     ),
     bodyLarge = TextStyle(
-        fontFamily = PublicSansLight,
+        fontFamily = FontFamily.Default,
         fontSize = 14.sp,
         letterSpacing = 0.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = PublicSansBold,
+        fontFamily = FontFamily.Default,
         fontSize = 14.sp,
         letterSpacing = 0.sp
     ),
     displayMedium = TextStyle(
-        fontFamily = PublicSansRegular,
+        fontFamily = FontFamily.Default,
         fontSize = 10.sp,
         letterSpacing = 0.sp
     )

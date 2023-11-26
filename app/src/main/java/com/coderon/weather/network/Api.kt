@@ -3,13 +3,11 @@ package com.coderon.weather.network
 import com.coderon.weather.model.DailyForecasts
 import com.coderon.weather.model.HourlyForecast
 import com.coderon.weather.model.Location
+import com.coderon.weather.model.secrets.APIKEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
-//const val APIKEY = "7CaGqx6X6u6mXMUQjo2sqGhYD6E4GGVY"
-const val APIKEY = "XXu9UT0yqIOtlB2olnNdnrlZztgVNj12"
 
 interface Api {
     @GET("locations/v1/cities/search")
@@ -23,12 +21,13 @@ interface Api {
         @Path("location_key") locationKey: String,
         @Query("apikey") apiKey: String = APIKEY,
         @Query("metric") metric: Boolean = true,
-    ):Response<DailyForecasts>
+    ): Response<DailyForecasts>
 
     @GET("forecasts/v1/hourly/12hour/{location_key}")
     suspend fun getHourlyForecasts(
         @Path("location_key") locationKey: String,
         @Query("apikey") apiKey: String = APIKEY,
+        @Query("details") details: Boolean = true,
         @Query("metric") metric: Boolean = true,
-    ):Response<List<HourlyForecast>>
+    ): Response<List<HourlyForecast>>
 }

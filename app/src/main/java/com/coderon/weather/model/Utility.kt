@@ -19,16 +19,21 @@ data class Position(
     val longitude: Double,
     @SerializedName("Elevation")
     val elevation: Elevation,
-
-    )
+)
 
 data class Elevation(
     @SerializedName("Metric")
     val metric: Value,
     @SerializedName("Imperial")
     val imperial: Value,
+)
 
-    )
+data class Temperature(
+    @SerializedName("Minimum")
+    val maximum: Value,
+    @SerializedName("Maximum")
+    val minimum: Value,
+)
 
 data class Value(
     @SerializedName("Value")
@@ -37,8 +42,7 @@ data class Value(
     val unit: String,
     @SerializedName("UnitType")
     val unitType: Int,
-
-    )
+)
 
 data class AdministrativeArea(
     @SerializedName("ID")
@@ -80,3 +84,44 @@ data class WeatherStat(
     val hasPrecipitation: Boolean,
 )
 
+data class SupplementalAdminAreas(
+    @SerializedName("IsAlias")
+    val level: Int,
+    @SerializedName("LocalizedName")
+    val localizedName: String,
+    @SerializedName("EnglishName")
+    val englishName: String,
+)
+
+
+data class RealFeelTemperature(
+    @SerializedName("Value")
+    val value: Double,
+    @SerializedName("Unit")
+    val unit: String,
+    @SerializedName("UnitType")
+    val unitType: Int,
+    @SerializedName("Phrase")
+    val phrase: String,
+)
+
+data class Wind(
+    @SerializedName("Speed")
+    val speed: Value,
+    @SerializedName("Direction")
+    val direction: Direction,
+)
+
+data class Direction(
+    @SerializedName("Degrees")
+    val degrees: Int,
+    @SerializedName("Localized")
+    val localized: String,
+    @SerializedName("English")
+    val english: String,
+)
+
+data class WindGust(
+    @SerializedName("Speed")
+    val speed: Value,
+)

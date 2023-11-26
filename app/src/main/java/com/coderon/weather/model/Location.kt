@@ -27,4 +27,7 @@ data class Location(
     val geoPosition: Position,
     @SerializedName("IsAlias")
     val isAlias: Boolean,
+    @SerializedName("SupplementalAdminAreas")
+    val supplementalAdminAreas: List<SupplementalAdminAreas>,
 )
+

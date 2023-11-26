@@ -1,29 +1,31 @@
 package com.coderon.weather.screen
 
+import android.icu.text.SimpleDateFormat
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.sharp.ArrowDownward
-import androidx.compose.material.icons.sharp.ArrowUpward
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,15 +45,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.coderon.weather.model.BaseModel
-import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Composable
 fun WeatherScreen(
     navController: NavController,
     locationKey: String,
     locationName: String,
-    state:String,
+    state: String,
     country: String,
     viewModel: WeatherViewModel = viewModel(),
 ) {
@@ -63,84 +65,188 @@ fun WeatherScreen(
         viewModel.getDailyForecast(locationKey)
     }
 
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
 
-        Row(modifier = Modifier.padding(vertical = 32.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.KeyboardArrowLeft,
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    },
-                contentDescription = null
-            )
+        Row(
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            FilledTonalIconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    modifier = Modifier.size(30.dp),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(
-                    text = locationName,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                )
-                Text(
-                    text = "$state , $country",
-                    color = Color.Gray
+            FilledTonalIconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Rounded.Menu,
+                    modifier = Modifier.size(30.dp),
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }
-        AnimatedVisibility(visible = hourlyForecasts is BaseModel.Success) {
-            val data = hourlyForecasts as BaseModel.Success
-            val temp = data.data.first().temperature
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "${temp.value}°${temp.unit}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 80.sp,
-                    color = Color.White,
-                )
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = locationName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 56.sp,
+            )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+            Text(
+                text = "$state, $country",
+                fontWeight = FontWeight.Normal,
+                fontSize = 32.sp,
+            )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+            AnimatedVisibility(visible = hourlyForecasts is BaseModel.Success) {
+                val data = hourlyForecasts as BaseModel.Success
+                val temp = data.data.first().temperature
+                val weatherIcon = data.data.first().weatherIcon
+
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 70.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier.size(150.dp),
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data("https://developer.accuweather.com/sites/default/files/${weatherIcon.fixIcon()}-s.png")
+                                .build(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit
+                        )
+                        Text(
+                            text = "${temp.value.toInt()}°${temp.unit}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 72.sp,
+                        )
+                    }
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Wind Speed")
+                            Text(text = "${data.data.first().wind.speed.value} ${data.data.first().wind.speed.unit}")
+                        }
+                        Divider()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "UV Index")
+                            Text(text = "${data.data.first().uvIndexText} ( ${data.data.first().uvIndex})")
+                        }
+                        Divider()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Humidity")
+                            Text(text = "${data.data.first().relativeHumidity}")
+                        }
+                        Divider()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Real feel")
+                            Text(text = "${data.data.first().realFeelTemperature.value.toInt()}")
+                        }
+                        Divider()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Chance of rain")
+                            Text(text = "${data.data.first().precipitationProbability} %")
+                        }
+                    }
+                }
+            }
+            AnimatedVisibility(visible = hourlyForecasts is BaseModel.Loading) {
+                Loading()
             }
         }
-        AnimatedVisibility(visible = hourlyForecasts is BaseModel.Loading) {
-            Loading()
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+
+
+
+        Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "Hourly Forecast",
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            color = Color.White
         )
         Spacer(modifier = Modifier.height(10.dp))
         AnimatedVisibility(visible = hourlyForecasts is BaseModel.Success) {
             val data = hourlyForecasts as BaseModel.Success
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(data.data) { forecast ->
-                    Column(
-                        modifier = Modifier
-                            .size(100.dp, 140.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(colorScheme.secondary),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = SimpleDateFormat("H a").format(Date(forecast.epochDAteTime * 1000)),
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AsyncImage(
-                            modifier = Modifier.size(70.dp),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data("https://developer.accuweather.com/sites/default/files/${forecast.weatherIcon.fixIcon()}-s.png")
-                                .build(), contentDescription = null,
-                            contentScale = ContentScale.Fit
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = forecast.temperature.value.toString() + "°" + forecast.temperature.unit,
-                            color = Color.White
-                        )
+            Card {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    items(data.data) { forecast ->
+                        Card {
+                            Column(
+                                modifier = Modifier
+                                    .size(100.dp, 140.dp)
+                                    .clip(RoundedCornerShape(16.dp)),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = SimpleDateFormat("h a",Locale("en")).format(Date(forecast.epochDAteTime * 1000)),
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                AsyncImage(
+                                    modifier = Modifier.size(70.dp),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data("https://developer.accuweather.com/sites/default/files/${forecast.weatherIcon.fixIcon()}-s.png")
+                                        .build(),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Fit
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = forecast.temperature.value.toInt()
+                                        .toString() + "°" + forecast.temperature.unit,
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -150,65 +256,54 @@ fun WeatherScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Hourly Forecast",
+            text = "Daily Forecast",
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            color = Color.White
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         AnimatedVisibility(visible = dailyForecasts is BaseModel.Success) {
 
             val data = dailyForecasts as BaseModel.Success
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(data.data.dailyForecasts) { forecast ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(colorScheme.secondary)
-                            .padding(start = 16.dp, end = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "${SimpleDateFormat("d").format(Date(forecast.epochDate * 1000))}th",
-                            color = Color.White
-                        )
-                        Row {
-                            Icon(
-                                imageVector = Icons.Sharp.ArrowDownward,
-                                contentDescription = null,
-                                tint = Color(0xffff5353)
-                            )
-                            Text(
-                                text = "${forecast.temperature.minimum.value}°${forecast.temperature.minimum.unit}",
-                                color = Color.White
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(
-                                imageVector = Icons.Sharp.ArrowUpward,
-                                contentDescription = null,
-                                tint = Color(0xff2eff8c)
-                            )
-                            Text(
-                                text = "${forecast.temperature.maximum.value}°${forecast.temperature.maximum.unit}",
-                                color = Color.White
-                            )
+            Card {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(data.data.dailyForecasts) { forecast ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .size(100.dp, 140.dp)
+                                    .clip(RoundedCornerShape(16.dp)),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = SimpleDateFormat("eeee", Locale("en")).format(Date(forecast.epochDate * 1000)),
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                AsyncImage(
+                                    modifier = Modifier.size(70.dp),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data("https://developer.accuweather.com/sites/default/files/${forecast.day.icon.fixIcon()}-s.png")
+                                        .build(),
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "${forecast.temperature.minimum.value.toInt()}° / ${forecast.temperature.maximum.value.toInt()}°"
+                                )
+                            }
                         }
-                        AsyncImage(
-                            modifier = Modifier.size(70.dp),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data("https://developer.accuweather.com/sites/defaults/files${forecast.day.icon.fixIcon()}-s.png")
-                                .build(),
-                            contentDescription = null
-                        )
                     }
                 }
             }
         }
         AnimatedVisibility(visible = dailyForecasts is BaseModel.Loading) {
             Loading()
+        }
+        AnimatedVisibility(visible = dailyForecasts is BaseModel.Error) {
+            val message = dailyForecasts as BaseModel.Error
+            Text(text = message.toString())
         }
     }
 }
