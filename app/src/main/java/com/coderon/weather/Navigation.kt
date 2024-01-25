@@ -7,14 +7,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.coderon.weather.screen.HomeScreen
+import com.coderon.weather.screen.SearchScreen
 import com.coderon.weather.screen.WeatherScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    startDestination: String,
+) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("home") {
             HomeScreen(navController = navController)
+
         }
         composable("weather/{location_key}/{name}/{country}/{state}", listOf(
             navArgument("location_key") {
@@ -34,6 +38,9 @@ fun Navigation() {
                 country = it.arguments?.getString("country") ?: "",
                 state = it.arguments?.getString("state") ?: ""
             )
+        }
+        composable("search") {
+            SearchScreen(navController = navController)
         }
     }
 }

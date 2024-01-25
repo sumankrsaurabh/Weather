@@ -1,13 +1,23 @@
 package com.coderon.weather.repositires
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.location.LocationManager
+import android.os.Looper
 import android.util.Log
 import com.coderon.weather.model.BaseModel
 import com.coderon.weather.model.DailyForecasts
 import com.coderon.weather.model.HourlyForecast
 import com.coderon.weather.model.Location
 import com.coderon.weather.network.Api
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.lang.Exception
 
 class WeatherRepoImpl(private val api: Api) : WeatherRepo {
     override suspend fun searchLocation(query: String): BaseModel<List<Location>> {
@@ -15,6 +25,13 @@ class WeatherRepoImpl(private val api: Api) : WeatherRepo {
             api.searchLocation(query = query)
         }
     }
+
+    override suspend fun searchLatLong(query: String): BaseModel<List<Location>> {
+        return request {
+            api.searchLatLong(query = query)
+        }
+    }
+
 
     override suspend fun getDailyForecasts(locationKey: String): BaseModel<DailyForecasts> {
         return request {
@@ -32,7 +49,7 @@ class WeatherRepoImpl(private val api: Api) : WeatherRepo {
 suspend fun <T> request(request: suspend () -> Response<T>): BaseModel<T> {
     try {
         request().also {
-            Log.d("Response",it.message())
+            Log.d("Response", it.message())
             return if (it.isSuccessful) {
                 BaseModel.Success(it.body()!!)
             } else {

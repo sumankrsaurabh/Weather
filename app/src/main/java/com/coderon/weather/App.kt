@@ -12,7 +12,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class App:Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
@@ -29,11 +29,11 @@ class App:Application() {
                         .build()
                 }
                 single {
-                    val retrofit:Retrofit = get()
+                    val retrofit: Retrofit = get()
                     retrofit.create(Api::class.java)
                 }
                 single {
-                    val api:Api = get()
+                    val api: Api = get()
                     WeatherRepoImpl(api)
                 } bind WeatherRepo::class
             })

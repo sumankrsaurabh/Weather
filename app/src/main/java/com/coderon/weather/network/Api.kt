@@ -3,7 +3,7 @@ package com.coderon.weather.network
 import com.coderon.weather.model.DailyForecasts
 import com.coderon.weather.model.HourlyForecast
 import com.coderon.weather.model.Location
-import com.coderon.weather.model.secrets.APIKEY
+import com.coderon.weather.model.Secrets.APIKEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -16,10 +16,17 @@ interface Api {
         @Query("q") query: String,
     ): Response<List<Location>>
 
+    @GET("locations/v1/cities/geoposition/search")
+    suspend fun searchLatLong(
+        @Query("apikey") apiKey: String = APIKEY,
+        @Query("q") query: String,
+    ): Response<List<Location>>
+
     @GET("forecasts/v1/daily/5day/{location_key}")
     suspend fun getDailyForecasts(
         @Path("location_key") locationKey: String,
         @Query("apikey") apiKey: String = APIKEY,
+        @Query("details") details: Boolean = true,
         @Query("metric") metric: Boolean = true,
     ): Response<DailyForecasts>
 

@@ -1,5 +1,10 @@
 package com.coderon.weather.model
 
+import com.coderon.weather.model.utility.AdministrativeArea
+import com.coderon.weather.model.utility.GeoPosition
+import com.coderon.weather.model.utility.Name
+import com.coderon.weather.model.utility.SupplementalAdminAreas
+import com.coderon.weather.model.utility.TimeZone
 import com.google.gson.annotations.SerializedName
 
 data class Location(
@@ -24,7 +29,7 @@ data class Location(
     @SerializedName("TimeZone")
     val timeZone: TimeZone,
     @SerializedName("GeoPosition")
-    val geoPosition: Position,
+    val geoPosition: GeoPosition,
     @SerializedName("IsAlias")
     val isAlias: Boolean,
     @SerializedName("SupplementalAdminAreas")
