@@ -20,23 +20,17 @@ fun Navigation(
             HomeScreen(navController = navController)
 
         }
-        composable("weather/{location_key}/{name}/{country}/{state}", listOf(
+        composable("weather/{location_key}/{name}", listOf(
             navArgument("location_key") {
                 type = NavType.StringType
             }, navArgument("name") {
-                type = NavType.StringType
-            }, navArgument("country") {
-                type = NavType.StringType
-            }, navArgument("state") {
                 type = NavType.StringType
             }
         )) {
             WeatherScreen(
                 navController = navController,
                 locationKey = it.arguments?.getString("location_key") ?: "",
-                locationName = it.arguments?.getString("name") ?: "",
-                country = it.arguments?.getString("country") ?: "",
-                state = it.arguments?.getString("state") ?: ""
+                locationName = it.arguments?.getString("name") ?: ""
             )
         }
         composable("search") {

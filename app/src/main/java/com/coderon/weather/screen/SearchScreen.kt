@@ -5,16 +5,21 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +32,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -38,14 +44,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.coderon.weather.model.BaseModel
+import com.coderon.weather.ui.theme.containerColor
 
 @Composable
 fun SearchScreen(
@@ -54,18 +61,17 @@ fun SearchScreen(
 ) {
     val locations by viewModel.location.collectAsState()
 
-    val (city, setCity) = remember {
-        mutableStateOf("")
-    }
+    val (city, setCity) = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(32.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(50)),
+                .clip(RoundedCornerShape(32.dp)),
             contentAlignment = Alignment.Center
         ) {
             TextField(
@@ -75,25 +81,33 @@ fun SearchScreen(
                 value = city,
                 onValueChange = { setCity(it) },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
-                    unfocusedContainerColor = Color.LightGray,
-                    disabledContainerColor = Color.LightGray,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
+                    focusedContainerColor = containerColor.copy(0.5f),
+                    unfocusedContainerColor = containerColor.copy(0.5f),
+                    disabledContainerColor = containerColor.copy(0.5f),
+                    focusedIndicatorColor = Transparent,
+                    unfocusedIndicatorColor = Transparent,
+                    disabledIndicatorColor = Transparent,
+                    errorIndicatorColor = Transparent,
+                    focusedTextColor = White,
+                    disabledSupportingTextColor = White,
+                    disabledTextColor = White,
+                    errorTextColor = Transparent,
+                    errorSupportingTextColor = Transparent,
                 ),
                 placeholder = {
                     Text(
-                        text = "Enter location"
+                        text = "Search your desire location",
+                        fontSize = 16.sp,
+                        color = White
                     )
                 },
-                shape = RoundedCornerShape(50),
+                shape = RoundedCornerShape(32.dp),
                 maxLines = 1,
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Rounded.Search,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = White
                     )
                 },
                 trailingIcon = {
@@ -101,6 +115,7 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Rounded.Clear,
                             contentDescription = null,
+                            tint = White,
                             modifier = Modifier.clickable {
                                 setCity("")
                             }
@@ -137,10 +152,11 @@ fun SearchScreen(
                                     modifier =
                                     Modifier
                                         .fillMaxWidth()
-                                        .height(50.dp)
-                                        .clip(RoundedCornerShape(8.dp))
+                                        .height(64.dp)
+                                        .clip(RoundedCornerShape(32.dp))
+                                        .background(containerColor)
                                         .clickable {
-                                            navController.navigate("weather/${location.key}/${location.englishName}/${location.country.englishName}/${location.administrativeArea.englishName}")
+                                            navController.navigate("weather/${location.key}/${location.englishName}")
                                         },
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
@@ -148,21 +164,19 @@ fun SearchScreen(
                                     Column {
                                         Text(
                                             text = location.englishName,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp,
-                                            color = Color.DarkGray
-                                        )
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                        Text(
-                                            text = location.administrativeArea.englishName + ", " + location.country.englishName,
-                                            color = Color.Gray,
-                                            fontSize = 12.sp
+                                            fontSize = 24.sp,
+                                            color = White
                                         )
                                     }
-                                    FilledTonalIconButton(onClick = { /*TODO*/ }) {
+                                    FilledTonalIconButton(onClick = { /*TODO*/ },
+                                        modifier = Modifier.size(48.dp),
+                                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                            containerColor = White.copy(0.5f)
+                                        )) {
                                         Icon(
                                             imageVector = Icons.Rounded.Add,
-                                            contentDescription = null
+                                            contentDescription = "add city",
+                                            tint = White
                                         )
                                     }
                                 }
@@ -183,7 +197,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color.LightGray)
+                CircularProgressIndicator(color = White)
             }
         }
     }

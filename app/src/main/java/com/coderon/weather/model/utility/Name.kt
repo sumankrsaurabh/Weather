@@ -53,10 +53,6 @@ data class GeoPosition(
     val latitude: Double,
     @SerializedName("Longitude")
     val longitude: Double,
-    @SerializedName("Elevation")
-    val elevation: Elevation,
-    @SerializedName("Imperial")
-    val imperial: Elevation,
 )
 
 data class Elevation(
