@@ -1,4 +1,4 @@
-package com.coderon.weather.database
+package com.coderon.weather.database.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -9,12 +9,12 @@ import com.coderon.weather.database.entity.Location
 
 @Dao
 interface LocationDao {
-    @Insert
-    fun addCity(cityEntity: Location)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCity(cityEntity: Location)
 
     @Query("SELECT * FROM location_table")
-    fun getCity(): Location
+    suspend fun getCity(): List<Location>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateCity(cityEntity: Location)
+    suspend fun updateLocation(cityEntity: Location)
 }

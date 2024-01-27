@@ -7,43 +7,44 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.core.view.WindowCompat
+import com.coderon.weather.location.RequestLocationPermission
 import com.coderon.weather.ui.theme.WeatherTheme
 import com.coderon.weather.ui.theme.bottomBackground
 import com.coderon.weather.ui.theme.topBackground
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            RequestLocationPermission()
             WeatherTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
+                Scaffold {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    listOf(
-                                        topBackground.copy(0.32f),
-                                        bottomBackground
-                                    )
-                                )
-                            ),
-                    )
-                    Navigation(startDestination = "search")
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(
+                                            topBackground.copy(0.32f),
+                                            bottomBackground
+                                        ),
+
+                                        )
+                                ),
+                        )
+                        Navigation(startDestination = "home")
+                    }
                 }
             }
         }

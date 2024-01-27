@@ -67,26 +67,32 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Material icons for extra functionality
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
 
+    //for navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
+    // Network request client and gson parsor
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // dependency injection
     implementation("io.insert-koin:koin-androidx-compose:3.5.0")
     implementation("io.insert-koin:koin-androidx-compose:3.5.0")
 
+    // image loading library
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    implementation ("com.google.android.gms:play-services-location:21.1.0")
-    implementation ("com.google.accompanist:accompanist-permissions:0.23.1")
+    //play service for location
+    implementation("com.google.android.gms:play-services-location:21.1.0")
+    // permission handler
+    implementation("com.google.accompanist:accompanist-permissions:0.23.1")
 
     //room database
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }

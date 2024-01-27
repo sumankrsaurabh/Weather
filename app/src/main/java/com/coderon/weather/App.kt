@@ -1,11 +1,14 @@
 package com.coderon.weather
 
 import android.app.Application
+import androidx.room.Room
+import com.coderon.weather.database.DataBase
 import com.coderon.weather.network.Api
 import com.coderon.weather.network.HeaderInterceptor
 import com.coderon.weather.repositires.WeatherRepo
 import com.coderon.weather.repositires.WeatherRepoImpl
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -16,6 +19,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            androidContext(this@App)
             modules(module {
                 single {
                     val client = OkHttpClient.Builder()
@@ -36,6 +40,13 @@ class App : Application() {
                     val api: Api = get()
                     WeatherRepoImpl(api)
                 } bind WeatherRepo::class
+                single {
+                    Room.databaseBuilder(
+                        applicationContext,
+                        DataBase::class.java,
+                        "weather.db"
+                    ).build()
+                }
             })
         }
     }

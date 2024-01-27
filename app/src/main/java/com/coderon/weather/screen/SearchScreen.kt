@@ -41,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,16 +52,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.coderon.weather.database.DataBase
+import com.coderon.weather.database.entity.Location
 import com.coderon.weather.model.BaseModel
 import com.coderon.weather.ui.theme.containerColor
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun SearchScreen(
     navController: NavController,
+    db: DataBase = koinInject(),
     viewModel: HomeViewModel = viewModel(),
 ) {
     val locations by viewModel.location.collectAsState()
-
+    val scope = rememberCoroutineScope()
     val (city, setCity) = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
@@ -156,8 +162,26 @@ fun SearchScreen(
                                         .clip(RoundedCornerShape(32.dp))
                                         .background(containerColor)
                                         .clickable {
+                                            scope.launch {
+                                                db
+                                                    .locationDao()
+                                                    .addCity(
+                                                        Location(
+                                                            version = location.version,
+                                                            key = location.key,
+                                                            type = location.type,
+                                                            rank = location.rank,
+                                                            localizedName = location.localizedName,
+                                                            englishName = location.englishName,
+                                                            latitude = location.geoPosition.latitude,
+                                                            longitude = location.geoPosition.longitude,
+                                                        )
+
+                                                    )
+                                            }
                                             navController.navigate("weather/${location.key}/${location.englishName}")
-                                        },
+                                        }
+                                        .padding(16.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -168,11 +192,28 @@ fun SearchScreen(
                                             color = White
                                         )
                                     }
-                                    FilledTonalIconButton(onClick = { /*TODO*/ },
-                                        modifier = Modifier.size(48.dp),
+                                    FilledTonalIconButton(
+                                        onClick = {
+                                            scope.launch {
+                                                db.locationDao().addCity(
+                                                    Location(
+                                                        version = location.version,
+                                                        key = location.key,
+                                                        type = location.type,
+                                                        rank = location.rank,
+                                                        localizedName = location.localizedName,
+                                                        englishName = location.englishName,
+                                                        latitude = location.geoPosition.latitude,
+                                                        longitude = location.geoPosition.longitude,
+                                                    )
+                                                )
+                                            }
+                                        },
+                                        modifier = Modifier.size(40.dp),
                                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                                             containerColor = White.copy(0.5f)
-                                        )) {
+                                        )
+                                    ) {
                                         Icon(
                                             imageVector = Icons.Rounded.Add,
                                             contentDescription = "add city",
