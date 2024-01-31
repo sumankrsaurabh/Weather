@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.coderon.weather.database.DataBase
+import com.coderon.weather.database.WeatherDataBase
 import com.coderon.weather.database.entity.Location
 import com.coderon.weather.model.BaseModel
 import com.coderon.weather.ui.theme.containerColor
@@ -62,7 +62,7 @@ import org.koin.compose.koinInject
 @Composable
 fun SearchScreen(
     navController: NavController,
-    db: DataBase = koinInject(),
+    db: WeatherDataBase = koinInject(),
     viewModel: HomeViewModel = viewModel(),
 ) {
     val locations by viewModel.location.collectAsState()
@@ -173,8 +173,7 @@ fun SearchScreen(
                                                             rank = location.rank,
                                                             localizedName = location.localizedName,
                                                             englishName = location.englishName,
-                                                            latitude = location.geoPosition.latitude,
-                                                            longitude = location.geoPosition.longitude,
+                                                            geoPosition = location.geoPosition
                                                         )
 
                                                     )
@@ -203,8 +202,7 @@ fun SearchScreen(
                                                         rank = location.rank,
                                                         localizedName = location.localizedName,
                                                         englishName = location.englishName,
-                                                        latitude = location.geoPosition.latitude,
-                                                        longitude = location.geoPosition.longitude,
+                                                        geoPosition = location.geoPosition
                                                     )
                                                 )
                                             }

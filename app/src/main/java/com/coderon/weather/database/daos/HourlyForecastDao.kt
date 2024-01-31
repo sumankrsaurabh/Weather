@@ -10,7 +10,7 @@ import com.coderon.weather.database.entity.HourlyForecast
 @Dao
 interface HourlyForecastDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addHourlyForecast(hourlyForecast: HourlyForecast)
+    suspend fun addHourlyForecast(hourlyForecast: List<HourlyForecast>)
 
     @Query("SELECT * FROM hourly_forecast")
     suspend fun getHourlyForecast(): List<HourlyForecast>

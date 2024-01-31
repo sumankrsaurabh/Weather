@@ -43,6 +43,7 @@ class DefaultLocationClient(
                     super.onLocationResult(result)
                     result.locations.lastOrNull()?.let { location ->
                         launch { send(location) }
+                        client.removeLocationUpdates(this)
                     }
                 }
             }

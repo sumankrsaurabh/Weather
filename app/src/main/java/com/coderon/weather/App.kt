@@ -2,11 +2,13 @@ package com.coderon.weather
 
 import android.app.Application
 import androidx.room.Room
-import com.coderon.weather.database.DataBase
+import com.coderon.weather.database.WeatherDataBase
+import com.coderon.weather.location.DefaultLocationClient
 import com.coderon.weather.network.Api
 import com.coderon.weather.network.HeaderInterceptor
 import com.coderon.weather.repositires.WeatherRepo
 import com.coderon.weather.repositires.WeatherRepoImpl
+import com.google.android.gms.location.LocationServices
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -20,34 +22,46 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(module {
-                single {
-                    val client = OkHttpClient.Builder()
-                        .addInterceptor(HeaderInterceptor())
-                        .build()
-                    Retrofit
-                        .Builder()
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(client)
-                        .baseUrl("http://dataservice.accuweather.com/")
-                        .build()
+            modules(
+                module {
+                    single {
+                        val client = OkHttpClient.Builder()
+                            .addInterceptor(HeaderInterceptor())
+                            .build()
+                        Retrofit
+                            .Builder()
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .client(client)
+                            .baseUrl("http://dataservice.accuweather.com/")
+                            .build()
+                    }
+                    single {
+                        val retrofit: Retrofit = get()
+                        retrofit.create(Api::class.java)
+                    }
+                    single {
+                        val api: Api = get()
+                        WeatherRepoImpl(api)
+                    } bind WeatherRepo::class
+                    single {
+                        Room.databaseBuilder(
+                            applicationContext,
+                            WeatherDataBase::class.java,
+                            "weather.db"
+                        ).fallbackToDestructiveMigration().build()
+                    }
+                    single {
+                        LocationServices
+                            .getFusedLocationProviderClient(applicationContext)
+                    }
+                    single {
+                        DefaultLocationClient(
+                            applicationContext,
+                            get()
+                        )
+                    }
                 }
-                single {
-                    val retrofit: Retrofit = get()
-                    retrofit.create(Api::class.java)
-                }
-                single {
-                    val api: Api = get()
-                    WeatherRepoImpl(api)
-                } bind WeatherRepo::class
-                single {
-                    Room.databaseBuilder(
-                        applicationContext,
-                        DataBase::class.java,
-                        "weather.db"
-                    ).build()
-                }
-            })
+            )
         }
     }
 }

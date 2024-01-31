@@ -1,12 +1,17 @@
 package com.coderon.weather.database.entity
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.coderon.weather.model.utility.RealFeelTemperature
+import com.coderon.weather.model.utility.TemperatureValue
+import com.coderon.weather.model.utility.Wind
 
 @Entity("hourly_forecast")
 data class HourlyForecast(
     @PrimaryKey(true)
-    val id : Int,
+    val id: Int = 0,
+    val key: String,
     val dateTime: String,
     val epochDateTime: Long,
     val weatherIcon: Int,
@@ -14,21 +19,14 @@ data class HourlyForecast(
     val hasPrecipitation: Boolean,
     val isDayNight: Boolean,
 //    temperature
-    val temperatureValue: Double,
-    val temperatureUnit: String,
-    val temperatureUnitType: Int,
+    @Embedded("temp_")
+    val temperature: TemperatureValue,
     // realFeelTemperature
-    val realFeelTemperatureValue: Double,
-    val realFeelTemperatureUnit: String,
-    val realFeelTemperatureUnitType: Int,
-    val realFeelTemperaturePhrase: String,
+    @Embedded("realFeelTemp_")
+    val realFeelTemperature: RealFeelTemperature,
 //    Wind class
-    val windSpeedValue: Double,
-    val windSpeedUnit: String,
-    val windSpeedUnitType: Int,
-    val windDirectionDegrees: Int,
-    val windDirectionLocalized: String,
-    val windDirectionEnglish: String,
+    @Embedded("wind_")
+    val wind: Wind,
     val relativeHumidity: Int,
     val indoorRelativeHumidity: Int,
     val uvIndex: Int,
