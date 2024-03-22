@@ -1,16 +1,18 @@
 package com.coderon.weather.screen
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.coderon.weather.database.WeatherDataBase
-import com.coderon.weather.database.converters.toLocal
-import com.coderon.weather.model.BaseModel
-import com.coderon.weather.screen.components.Loading
+import com.coderon.weather.screen.components.CurrentWeather
 import org.koin.compose.koinInject
 
 @Composable
@@ -19,21 +21,17 @@ fun HomeScreen(
     db: WeatherDataBase = koinInject(),
     viewModel: HomeViewModel = viewModel(),
 ) {
-    val locations by viewModel.location.collectAsState()
 
-    // Fetch local locations from the database or navigate to the first location
-    LaunchedEffect(true) {
-        viewModel.getUserLocation()
-    }
-    AnimatedVisibility(visible = locations is BaseModel.Loading) {
-        Loading()
-    }
-    AnimatedVisibility(visible = locations is BaseModel.Success) {
-        val data = locations as BaseModel.Success
-        val loc = data.data.first()
-        LaunchedEffect(true) {
-            db.locationDao().addCity(loc.toLocal())
-        }
-        navController.navigate("weather/${loc.key}/${loc.englishName}")
+    Column(
+        modifier = Modifier.padding(horizontal = 24.dp)
+            .fillMaxSize()
+            .safeContentPadding()
+    ) {
+        CurrentWeather(
+            city = "Begusarai",
+            chanceOfRain = 50,
+            temperature = 30,
+            weatherIcon = 20
+        )
     }
 }

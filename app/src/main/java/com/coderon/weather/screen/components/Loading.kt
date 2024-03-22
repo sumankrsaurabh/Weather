@@ -37,6 +37,7 @@ import androidx.compose.ui.window.DialogProperties
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Loading(
+    message: String,
     cornerRadius: Dp = 16.dp,
     progressIndicatorColor: Color = Color(0xFF35898f),
     progressIndicatorSize: Dp = 80.dp,
@@ -71,7 +72,7 @@ fun Loading(
 
                 // Please wait text
                 Text(
-                    text = "Please wait...",
+                    text ="${message}",
                     style = TextStyle(
                         color = Color.Black,
                         fontSize = 16.sp,

@@ -8,6 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.navigation.compose.rememberNavController
@@ -18,8 +21,6 @@ import com.coderon.weather.ui.theme.topBackground
 
 
 class MainActivity : ComponentActivity() {
-
-
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,23 +29,10 @@ class MainActivity : ComponentActivity() {
             RequestLocationPermission()
             val navController = rememberNavController()
             WeatherTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+                Surface(
+                    color = MaterialTheme.colorScheme.primary
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        topBackground.copy(0.32f),
-                                        bottomBackground
-                                    )
-                                )
-                            ),
-                    )
-                    Navigation(navController, startDestination = "home")
+                    App(navController)
                 }
             }
         }

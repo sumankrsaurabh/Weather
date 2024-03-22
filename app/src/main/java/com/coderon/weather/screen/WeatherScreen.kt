@@ -428,7 +428,7 @@ fun WeatherScreen(
             visible = hourlyForecasts is BaseModel.Loading
                     && dailyForecasts is BaseModel.Loading
         ) {
-            Loading()
+            Loading("Fetching data")
         }
     }
 }
