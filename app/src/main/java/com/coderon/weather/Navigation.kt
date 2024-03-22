@@ -11,28 +11,14 @@ import com.coderon.weather.screen.SearchScreen
 import com.coderon.weather.screen.WeatherScreen
 
 @Composable
-fun Navigation(
+fun App(
     navController: NavHostController,
-    startDestination: String,
+    startDestination: String = "home",
 ) {
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("home") {
             HomeScreen(navController = navController)
-
-        }
-        composable("weather/{location_key}/{name}", listOf(
-            navArgument("location_key") {
-                type = NavType.StringType
-            }, navArgument("name") {
-                type = NavType.StringType
-            }
-        )) {
-            WeatherScreen(
-                navController = navController,
-                locationKey = it.arguments?.getString("location_key") ?: "",
-                locationName = it.arguments?.getString("name") ?: ""
-            )
         }
         composable("search") {
             SearchScreen(navController = navController)

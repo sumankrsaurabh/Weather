@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -25,7 +26,7 @@ class DefaultLocationClient(
     override fun getLocationUpdates(interval: Long): Flow<Location> {
         return callbackFlow {
             if(!context.hasLocationPermission()) {
-                throw LocationClient.LocationException("Missing location permission")
+                Log.d("Permission missing", "getLocationUpdates: hasnot location permission")
             }
 
             val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
