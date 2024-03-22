@@ -1,5 +1,47 @@
-This is an official weather forecast app developed by coderon software limited in collabration with acuWeather api who is the data provider for this app
+## **[Mausham]**
 
-Designed and developed by SUMAN KUMAR SAURABH
+[a weather app free and open source]
 
-![Home Screen](https://github.com/sumankrsaurabh/Weather/assets/119068932/34dee208-5419-4e18-973a-ce2186f32d87)
+**Description**
+* Provide a concise description of your weather app's key features and functionalities. Here's an example to build upon:
+
+   "This user-friendly weather app provides accurate, real-time weather information for any location worldwide. Get current conditions, hourly forecasts, extended forecasts, detailed weather data, and visually appealing weather maps."
+
+**Features**
+
+* **Current Conditions:**
+    * Temperature (Celsius/Fahrenheit)
+    * "Feels like" temperature
+    * Humidity
+    * Wind speed and direction
+    * Weather description and icon 
+* **Hourly Forecast:** 
+    * Temperature trends
+    * Chance of precipitation
+* **Extended Forecast:**
+    * Daily high/low temperatures
+    * Weather summaries
+    * (5-day or 7-day forecast options)
+* **Location Search:**
+    * Search by city, zip code, or GPS coordinates
+* **Customizable Settings:**
+    * Temperature units (Celsius/Fahrenheit)
+    * Favorite locations 
+    * Optional: Theme selection (light/dark)
+    * Optional: Notifications for severe weather alerts
+
+**Contributing**
+
+* If you'd like to have people contribute, include guidelines on how to:
+    * Report issues
+    *  Suggest new features
+    * Submit code changes (pull requests)
+
+**License**
+
+*  Specify the type of license your project uses  (e.g., MIT, GPL, Apache 2.0)
+
+**Contact**
+
+[Your name or contact email]
+
