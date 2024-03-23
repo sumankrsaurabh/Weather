@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/src/main/java/com/coderon/weather/secrets.kt
+app/src/main/java/com/coderon/weather/model/Secrets.kt

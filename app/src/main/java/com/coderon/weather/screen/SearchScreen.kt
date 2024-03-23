@@ -63,7 +63,7 @@ import org.koin.compose.koinInject
 fun SearchScreen(
     navController: NavController,
     db: WeatherDataBase = koinInject(),
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: WeatherViewModel = viewModel(),
 ) {
     val locations by viewModel.location.collectAsState()
     val scope = rememberCoroutineScope()
