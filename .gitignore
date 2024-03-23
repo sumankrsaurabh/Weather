@@ -14,3 +14,7 @@
 .cxx
 local.properties
 app/src/main/java/com/coderon/weather/model/Secrets.kt
+#.idea/modules/app
+Secrets.kt
+*/Secrets.kt
+Secrets
