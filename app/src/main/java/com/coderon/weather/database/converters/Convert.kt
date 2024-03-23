@@ -1,9 +1,7 @@
 package com.coderon.weather.database.converters
 
-import com.coderon.weather.database.entity.DailyForecast
 import com.coderon.weather.database.entity.HourlyForecast
 import com.coderon.weather.database.entity.Location
-import com.coderon.weather.model.utility.Moon
 
 
 fun Location.fromLocal(): com.coderon.weather.model.Location {
@@ -80,33 +78,5 @@ fun com.coderon.weather.model.HourlyForecast.toLocal(key: String): HourlyForecas
         cloudCover = this.cloudCover,
         mobileLink = this.mobileLink,
         link = this.link,
-    )
-}
-
-fun DailyForecast.fromLocal(): com.coderon.weather.model.DailyForecast {
-    return com.coderon.weather.model.DailyForecast(
-        date = this.date,
-        epochDate = this.epochDate,
-        sun = this.sun,
-//        moon = this.moon,
-        moon = Moon("",0L,"",0L,"",0),
-        temperature = this.temperature,
-        hoursOfSun = this.hoursOfSun,
-        day = this.day,
-        night = this.night
-    )
-}
-
-fun com.coderon.weather.model.DailyForecast.toLocal(key: String): DailyForecast {
-    return DailyForecast(
-        key = key,
-        date = this.date,
-        epochDate = this.epochDate,
-        sun = this.sun,
-        moon = this.moon,
-        temperature = this.temperature,
-        hoursOfSun = this.hoursOfSun,
-        day = this.day,
-        night = this.night
     )
 }

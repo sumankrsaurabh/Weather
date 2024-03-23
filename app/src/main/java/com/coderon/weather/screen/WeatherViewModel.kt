@@ -1,11 +1,11 @@
 package com.coderon.weather.screen
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coderon.weather.database.WeatherDataBase
 import com.coderon.weather.database.converters.fromLocal
+import com.coderon.weather.database.converters.toLocal
 import com.coderon.weather.location.DefaultLocationClient
 import com.coderon.weather.model.BaseModel
 import com.coderon.weather.model.DailyForecasts
@@ -27,6 +27,11 @@ class WeatherViewModel : ViewModel(), KoinComponent {
     private val _city: MutableStateFlow<String?> = MutableStateFlow(null)
     val city = _city.asStateFlow()
 
+
+    private val _location: MutableStateFlow<BaseModel<List<Location>>> =
+        MutableStateFlow(BaseModel.Loading)
+    val location = _location.asStateFlow()
+
     private val _hourlyForecast: MutableStateFlow<BaseModel<List<HourlyForecast>>> =
         MutableStateFlow(BaseModel.Loading)
     val hourlyForecast = _hourlyForecast.asStateFlow()
@@ -35,13 +40,31 @@ class WeatherViewModel : ViewModel(), KoinComponent {
         MutableStateFlow(BaseModel.Loading)
     val dailyForecast = _dailyForecast.asStateFlow()
 
-    fun setCity(city:String){
+    fun setCity(city: String) {
         _city.update { city }
     }
+
     fun getHourlyForecast(locationKey: String) {
         viewModelScope.launch {
+            val hourlyForecast = db.hourlyForecastDao().getHourlyForecast()
+            if (hourlyForecast.isEmpty()) {
+                _hourlyForecast.update { BaseModel.Loading }
+            } else {
+                _hourlyForecast.update {
+                    BaseModel.Success(hourlyForecast.map {
+                        it.fromLocal()
+                    })
+                }
+            }
             repo.getHourlyForecasts(locationKey).also { data ->
-                _hourlyForecast.update { data }
+                if (data is BaseModel.Success) {
+                    val forecast = data.data
+                    val savableForecast = forecast.map { it.toLocal(locationKey) }
+                    db.hourlyForecastDao().addHourlyForecast(savableForecast)
+                    _hourlyForecast.update {
+                        BaseModel.Success(forecast)
+                    }
+                }
             }
         }
     }
@@ -49,14 +72,23 @@ class WeatherViewModel : ViewModel(), KoinComponent {
 
     fun getDailyForecast(locationKey: String) {
         viewModelScope.launch {
+            val dailyForecast = db.dailyForecastDao().getDailyForecast()
+            if (dailyForecast.isEmpty()) {
+                _dailyForecast.update { BaseModel.Loading }
+            } else {
+                _dailyForecast.update { BaseModel.Success(DailyForecasts(dailyForecast.map { it.fromLocal() })) }
+            }
             repo.getDailyForecasts(locationKey).also { data ->
+                if (data is BaseModel.Success) {
+                    val forecast = data.data
+                    val savableForecast = forecast.dailyForecasts.map { it.toLocal(locationKey) }
+                    db.dailyForecastDao().addDailyForecast(savableForecast)
+                    Log.d("TAG", "getDailyForecast: $savableForecast")
+                }
                 _dailyForecast.update { data }
             }
         }
     }
-
-    private val _location: MutableStateFlow<BaseModel<List<Location>>?> = MutableStateFlow(null)
-    val location = _location.asStateFlow()
 
 
     fun searchLocation(query: String) {
@@ -68,23 +100,18 @@ class WeatherViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun getUserLocation(refresh: Boolean = true) {
+    fun getUserLocation(refresh: Boolean = false) {
         val locationClient: DefaultLocationClient by inject()
 
         viewModelScope.launch {
             val city = db.locationDao().getCity()
-            _location.update { BaseModel.Loading }
 
-            if (refresh || city.isEmpty()) {
+            if (city.isEmpty() || refresh) {
                 locationClient.getLocationUpdates(10000L).collect { location ->
-                    Log.d(
-                        "HomeViewModel",
-                        "Received user location: ${location.latitude},${location.longitude}"
-                    )
                     searchLatLong("${location.latitude},${location.longitude}")
                 }
             } else {
-                convertLocalToUi(city)
+                _location.update { BaseModel.Success(city.map { it.fromLocal() }) }
             }
         }
     }
@@ -93,15 +120,13 @@ class WeatherViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             _location.update { BaseModel.Loading }
             repo.searchLocation(query).also { data ->
+                if (data is BaseModel.Success) {
+                    val location = data.data
+                    location.forEach { db.locationDao().addCity(it.toLocal()) }
+                }
                 _location.update { data }
             }
         }
-    }
-
-    private fun convertLocalToUi(location: List<com.coderon.weather.database.entity.Location>): BaseModel<List<Location>> {
-        return BaseModel.Success(location.map {
-            it.fromLocal()
-        })
     }
 
 }
