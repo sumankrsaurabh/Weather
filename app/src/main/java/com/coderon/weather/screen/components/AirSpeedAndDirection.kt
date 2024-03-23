@@ -50,7 +50,7 @@ fun AirSpeedAndDirection(direction: Float,modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(32.dp))
+            .clip(RoundedCornerShape(24.dp))
             .background(containerColorWidget)
             .padding(16.dp)
     ) {
