@@ -2,11 +2,9 @@ package com.coderon.weather.location
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -33,8 +31,8 @@ class DefaultLocationClient(
             val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
             if(!isGpsEnabled && !isNetworkEnabled) {
-                val enableGpsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                context.startActivity(enableGpsIntent)
+//                val enableGpsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                context.startActivity(enableGpsIntent)
             }
 
             val request = LocationRequest.Builder(interval).build()

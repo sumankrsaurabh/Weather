@@ -5,22 +5,17 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.coderon.weather.location.RequestLocationPermission
 import com.coderon.weather.ui.theme.WeatherTheme
-import com.coderon.weather.ui.theme.bottomBackground
-import com.coderon.weather.ui.theme.topBackground
+import com.coderon.weather.ui.theme.backgroundColor
 
 
 class MainActivity : ComponentActivity() {
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +25,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             WeatherTheme {
                 Surface(
-                    color = MaterialTheme.colorScheme.primary
+                    color = if (isSystemInDarkTheme()) Color.Black.copy(.9f)
+                    else backgroundColor.copy(.9f),
                 ) {
                     App(navController)
                 }

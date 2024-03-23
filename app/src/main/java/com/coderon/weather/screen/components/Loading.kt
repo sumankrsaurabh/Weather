@@ -38,7 +38,7 @@ import androidx.compose.ui.window.DialogProperties
 @Composable
 fun Loading(
     message: String,
-    cornerRadius: Dp = 16.dp,
+    cornerRadius: Dp = 24.dp,
     progressIndicatorColor: Color = Color(0xFF35898f),
     progressIndicatorSize: Dp = 80.dp,
 ) {
@@ -50,7 +50,7 @@ fun Loading(
             onDismissRequest = {
             },
             properties = DialogProperties(
-                usePlatformDefaultWidth = false // disable the default size so that we can customize it
+                usePlatformDefaultWidth = true // disable the default size so that we can customize it
             )
         ) {
             Column(
