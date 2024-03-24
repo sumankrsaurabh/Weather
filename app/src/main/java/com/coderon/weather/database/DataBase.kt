@@ -17,7 +17,7 @@ import com.coderon.weather.database.entity.HourlyForecast
 import com.coderon.weather.database.entity.Location
 
 @Database(
-    version = 9,
+    version = 10,
     entities = [Location::class, HourlyForecast::class, DailyForecast::class],
     exportSchema = false
 )

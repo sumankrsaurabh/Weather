@@ -1,6 +1,5 @@
 package com.coderon.weather.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coderon.weather.database.WeatherDataBase
@@ -20,6 +19,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class WeatherViewModel : ViewModel(), KoinComponent {
+
     private val repo: WeatherRepo by inject()
 
     private val db: WeatherDataBase by inject()
@@ -56,16 +56,17 @@ class WeatherViewModel : ViewModel(), KoinComponent {
                     })
                 }
             }
-            repo.getHourlyForecasts(locationKey).also { data ->
+            /*repo.getHourlyForecasts(locationKey).also { data ->
                 if (data is BaseModel.Success) {
                     val forecast = data.data
                     val savableForecast = forecast.map { it.toLocal(locationKey) }
+                    db.hourlyForecastDao().deleteHourlyForecast(locationKey)
                     db.hourlyForecastDao().addHourlyForecast(savableForecast)
                     _hourlyForecast.update {
                         BaseModel.Success(forecast)
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -78,15 +79,15 @@ class WeatherViewModel : ViewModel(), KoinComponent {
             } else {
                 _dailyForecast.update { BaseModel.Success(DailyForecasts(dailyForecast.map { it.fromLocal() })) }
             }
-            repo.getDailyForecasts(locationKey).also { data ->
+            /*repo.getDailyForecasts(locationKey).also { data ->
                 if (data is BaseModel.Success) {
                     val forecast = data.data
                     val savableForecast = forecast.dailyForecasts.map { it.toLocal(locationKey) }
+                    db.dailyForecastDao().deleteDailyForecast(locationKey)
                     db.dailyForecastDao().addDailyForecast(savableForecast)
-                    Log.d("TAG", "getDailyForecast: $savableForecast")
                 }
                 _dailyForecast.update { data }
-            }
+            }*/
         }
     }
 
