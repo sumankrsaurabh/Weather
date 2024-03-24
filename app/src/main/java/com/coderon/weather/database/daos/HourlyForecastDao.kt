@@ -17,4 +17,7 @@ interface HourlyForecastDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateHourlyForecast(hourlyForecast: HourlyForecast)
+
+    @Query("DELETE  FROM daily_forecast WHERE :key")
+    suspend fun deleteHourlyForecast(key: String)
 }
