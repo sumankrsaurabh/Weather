@@ -48,7 +48,7 @@ fun AirSpeedAndDirection(direction: Float, speed: String) {
                     imageVector = Icons.Rounded.Air, contentDescription = "air",
                     tint = Color.White
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Wind",
                     fontWeight = FontWeight.Bold,
@@ -59,12 +59,12 @@ fun AirSpeedAndDirection(direction: Float, speed: String) {
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Canvas(
                     modifier = Modifier
-                        .height(48.dp)
+                        .height(24.dp)
                         .aspectRatio(1f)
                 ) {
                     val radius = size.width / 2F
@@ -80,14 +80,14 @@ fun AirSpeedAndDirection(direction: Float, speed: String) {
                         drawLine(
                             color = Color.White,
                             start = center + Offset(0f, radius * 0.9f),
-                            end = center + Offset(24f, radius * 0.5f),
+                            end = center + Offset(16f, radius * 0.5f),
                             strokeWidth = 4.dp.toPx(),
                             cap = StrokeCap.Round
                         )
                         drawLine(
                             color = Color.White,
                             start = center + Offset(0f, radius * 0.9f),
-                            end = center + Offset(-24f, radius * 0.5f),
+                            end = center + Offset(-16f, radius * 0.5f),
                             strokeWidth = 4.dp.toPx(),
                             cap = StrokeCap.Round
                         )
@@ -95,9 +95,10 @@ fun AirSpeedAndDirection(direction: Float, speed: String) {
                     }
                 }
                 Text(
-                    text = "$speed",
+                    text = speed,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
+                    maxLines = 1
                 )
             }
         }

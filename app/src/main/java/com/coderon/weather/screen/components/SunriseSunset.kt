@@ -1,6 +1,5 @@
 package com.coderon.weather.screen.components
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,7 @@ import kotlin.math.min
 fun SunriseSunset(
     sunrise: Long,
     sunset: Long,
-    currentTime: Long
+    currentTime: Long,
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -62,8 +61,9 @@ fun SunriseSunset(
 
                 // Calculate the percentage of the day passed
                 val totalDuration = sunset - sunrise
-                val currentTimeRelativeToSunrise = (currentTime /1000) - sunrise
-                val percentageOfDay = currentTimeRelativeToSunrise.toFloat() / totalDuration.toFloat()
+                val currentTimeRelativeToSunrise = (currentTime / 1000) - sunrise
+                val percentageOfDay =
+                    currentTimeRelativeToSunrise.toFloat() / totalDuration.toFloat()
                 val angle = percentageOfDay * 180 // Convert percentage to angle
 
                 val radius = (d2) / 2
@@ -80,6 +80,20 @@ fun SunriseSunset(
                     end = Offset(d2 + 24.dp.toPx(), d1),
                     strokeWidth = 1.dp.toPx()
                 )
+                // Draw the line representing the horizon
+                drawLine(
+                    color = Color.White,
+                    start = Offset(-22.dp.toPx(), d1 + 12f),
+                    end = Offset(d2 + 22.dp.toPx(), d1 +12f),
+                    strokeWidth = 1.dp.toPx()
+                )
+                // Draw the line representing the horizon
+                drawLine(
+                    color = Color.White,
+                    start = Offset(-20.dp.toPx(), d1 +24f),
+                    end = Offset(d2 + 20.dp.toPx(), d1 +24f),
+                    strokeWidth = 1.dp.toPx()
+                )
 
                 // Draw the arc representing the day's progress
                 drawArc(
@@ -92,15 +106,16 @@ fun SunriseSunset(
                 )
 
                 // Draw the circle indicating the current time position
-                drawCircle(
-                    color = Color(0xFFFFC400),
-                    radius = 8.dp.toPx(),
-                    center = Offset(circleX, circleY)
-                )
-                Log.d("Position" ,"(${circleX},${circleY})")
+                if (currentTime in (sunrise + 1)..<sunset) {
+                    drawCircle(
+                        color = Color(0xFFFFC400),
+                        radius = 8.dp.toPx(),
+                        center = Offset(circleX, circleY)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.width(240.dp),
                 verticalAlignment = Alignment.CenterVertically,

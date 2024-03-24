@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -22,8 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.coderon.weather.R
 
+
 @Composable
-fun RelativeHumidity(humidity: Int) {
+fun RealFeelTemperature(realFeelTemperature: Int) {
 
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -39,12 +41,13 @@ fun RelativeHumidity(humidity: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.humidity), contentDescription = "air",
-                    tint = Color.White
+                    painter = painterResource(id = R.drawable.realfeel_temp), contentDescription = "real feel_temp",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Humidity",
+                    text = "Temp",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = Color.White
@@ -56,8 +59,8 @@ fun RelativeHumidity(humidity: Int) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "$humidity%",
+               Text(
+                    text = "$realFeelTemperature°",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 24.sp
                 )

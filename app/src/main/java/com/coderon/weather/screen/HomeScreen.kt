@@ -2,6 +2,7 @@ package com.coderon.weather.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import com.coderon.weather.screen.components.AirSpeedAndDirection
 import com.coderon.weather.screen.components.CurrentWeather
 import com.coderon.weather.screen.components.Loading
 import com.coderon.weather.screen.components.MoonriseMoonset
+import com.coderon.weather.screen.components.RealFeelTemperature
 import com.coderon.weather.screen.components.RelativeHumidity
 import com.coderon.weather.screen.components.SunriseSunset
 import com.coderon.weather.screen.components.TodayForecast
@@ -110,11 +112,24 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    AirSpeedAndDirection(
-                        direction = dailyForecastResult.dailyForecasts.first().day.wind.direction.degrees.toFloat(),
-                        speed = "${dailyForecastResult.dailyForecasts.first().day.wind.speed.value}" +
-                                dailyForecastResult.dailyForecasts.first().day.wind.speed.unit
-                    )
+                    Box(modifier = Modifier.weight(1f)) {
+                        AirSpeedAndDirection(
+                            direction = dailyForecastResult.dailyForecasts.first().day.wind.direction.degrees.toFloat(),
+                            speed = "${dailyForecastResult.dailyForecasts.first().day.wind.speed.value}"
+                        )
+                    }
+                    Box(modifier = Modifier.weight(1f)) {
+                        RealFeelTemperature(realFeelTemperature = todayForecastResult.first().realFeelTemperature.value.toInt())
+                    }
+                }
+            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
                     RelativeHumidity(humidity = todayForecastResult.first().relativeHumidity)
                 }
             }
