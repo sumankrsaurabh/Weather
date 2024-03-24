@@ -1,5 +1,6 @@
 package com.coderon.weather.screen.components
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,17 +59,30 @@ fun SunriseSunset(
             ) {
                 val d1 = min(size.width, size.height)
                 val d2 = max(size.width, size.height)
-
-                // Calculate the percentage of the day passed
-                val totalDuration = sunset - sunrise
-                val currentTimeRelativeToSunrise = (currentTime / 1000) - sunrise
-                val percentageOfDay =
-                    currentTimeRelativeToSunrise.toFloat() / totalDuration.toFloat()
-                val angle = percentageOfDay * 180 // Convert percentage to angle
-
                 val radius = (d2) / 2
-                val angleInRadians = Math.toRadians(angle.toDouble())
 
+                val totalDuration = sunset - sunrise
+                val currentTimeRelativeToSunrise =
+                    if (currentTime < sunrise) {
+                        -1000
+                    } else if (currentTime > sunset) {
+                        sunset - sunrise + 1000
+                    } else {
+                        currentTime - sunrise
+                    }
+
+                Log.d("Current Time", "Current Time: $currentTimeRelativeToSunrise")
+
+                val color = if (currentTime < sunrise || currentTime > sunset) {
+                    Color(0xFFCFCFCF)
+                } else {
+                    Color(0xffff8100)
+                }
+
+                val percentageOfDay =
+                    currentTimeRelativeToSunrise / totalDuration.toFloat()
+                val angle = percentageOfDay * 180 // Convert percentage to angle
+                val angleInRadians = Math.toRadians(angle.toDouble())
                 // Calculate the position of the circle on the arc
                 val circleX = (size.width / 2 - radius * kotlin.math.cos(angleInRadians)).toFloat()
                 val circleY = (size.height - radius * kotlin.math.sin(angleInRadians)).toFloat()
@@ -84,14 +98,14 @@ fun SunriseSunset(
                 drawLine(
                     color = Color.White,
                     start = Offset(-22.dp.toPx(), d1 + 12f),
-                    end = Offset(d2 + 22.dp.toPx(), d1 +12f),
+                    end = Offset(d2 + 22.dp.toPx(), d1 + 12f),
                     strokeWidth = 1.dp.toPx()
                 )
                 // Draw the line representing the horizon
                 drawLine(
                     color = Color.White,
-                    start = Offset(-20.dp.toPx(), d1 +24f),
-                    end = Offset(d2 + 20.dp.toPx(), d1 +24f),
+                    start = Offset(-20.dp.toPx(), d1 + 24f),
+                    end = Offset(d2 + 20.dp.toPx(), d1 + 24f),
                     strokeWidth = 1.dp.toPx()
                 )
 
@@ -106,13 +120,13 @@ fun SunriseSunset(
                 )
 
                 // Draw the circle indicating the current time position
-                if (currentTime in (sunrise + 1)..<sunset) {
-                    drawCircle(
-                        color = Color(0xFFFFC400),
-                        radius = 8.dp.toPx(),
-                        center = Offset(circleX, circleY)
-                    )
-                }
+
+                drawCircle(
+                    color = color,
+                    radius = 8.dp.toPx(),
+                    center = Offset(circleX, circleY)
+                )
+
             }
 
             Spacer(modifier = Modifier.height(8.dp))
